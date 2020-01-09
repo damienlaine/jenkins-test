@@ -1,4 +1,2 @@
-awk -v RS='' '/#/ {print; exit}' RELEASE.md
-test1
 test
 test
