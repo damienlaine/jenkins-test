@@ -13,6 +13,12 @@ pipeline {
             }
         }
 
+        stage('Build') {
+            steps {
+                sh 'printenv'
+            }
+        }
+
         stage ('Switch branches'){
             steps {
                 script {
