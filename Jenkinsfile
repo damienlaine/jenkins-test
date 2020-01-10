@@ -14,13 +14,13 @@ pipeline {
         }
         stage ('Switch branches'){
             steps {
-                echo "Current agent  info: ${env.GIT_BRANCH}"
                 script {
                     def agentInfo = sh script:'git rev-parse --abbrev-ref HEAD', returnStdout: true
                     println "Gitbranch: ${gitBranch}"
                     GIT_BRANCH = agentInfo.replace("/n", "")
                     env.GIT_BRANCH = GIT_BRANCH
                 }
+                 echo "Current agent  info: ${env.GIT_BRANCH}"
             }
         }
         stage('master-branch-stuff'){
