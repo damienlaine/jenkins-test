@@ -15,7 +15,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'printenv'
+                sh 'git status'
             }
         }
 
