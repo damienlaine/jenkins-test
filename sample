@@ -1,0 +1,59 @@
+pipeline {
+
+    agent any
+
+	options {
+		ansiColor("xterm")
+	}
+	stages {
+		stage ('Clonage repo GIT') {
+			steps {
+				checkout([$class: 'GitSCM', branches: [[name: '*/build_in_workspace']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '2c02bac5-27ae-4bfc-8056-4db5c6139a90', url: 'http://10.5.169.151/poc/outillage_on_docker.git']]])
+			}
+		}
+		stage ('Fix the permission issue') {
+          	  steps {
+                	sh 'sudo chown root:jenkins /run/docker.sock'
+            	  }
+		}
+		stage ('Build App in Workspace') {
+		    environment {
+				ANSIBLE_FORCE_COLOR = true
+		//		IMAGE_NAME = 'mediawiki_custom2'
+	        		IMAGE_NAME = 'busybox_custom'
+				IMAGE_VERSION = '1.0'
+				NEXUS_IP = '10.5.169.153'
+			    NEXUS_PORT = '8123'
+			    IMAGE_TAG = "$NEXUS_IP:$NEXUS_PORT/$IMAGE_NAME:$IMAGE_VERSION"
+			    DOCKERFILE_REPOSITORY = 'docker'
+			    DOCKERFILE = 'dockerfile_busybox_custom'
+			} 
+/*
+			agent {
+			    dockerfile {
+		        	filename 'dockerfile_busybox_custom'
+			        dir 'docker'
+			        additionalBuildArgs '-t 10.5.169.153:8123/busybox_custom:1.0'
+			    } */
+		steps {
+                sh 'docker build -f $DOCKERFILE_REPOSITORY/$DOCKERFILE -t $IMAGE_TAG .'
+            }
+
+		}
+		stage ('Push image into Nexus repository') {
+		    environment {
+				ANSIBLE_FORCE_COLOR = true
+		    //  IMAGE_NAME = 'mediawiki_custom2'
+	        	IMAGE_NAME = 'busybox_custom'
+				IMAGE_VERSION = '1.0'
+				NEXUS_IP = '10.5.169.153'
+			    NEXUS_PORT = '8123'
+			    IMAGE_TAG = "$NEXUS_IP:$NEXUS_PORT/$IMAGE_NAME:$IMAGE_VERSION"
+				NEXUS_LOGIN = 'admin'
+				NEXUS_PASSWD = 'admin123'
+			}
+            steps {
+                sh 'docker login -u $NEXUS_LOGIN -p $NEXUS_PASSWD $NEXUS_IP:$NEXUS_PORT'
+                sh 'docker push $IMAGE_TAG' 
+            }
+		}

@@ -15,9 +15,10 @@ pipeline {
         stage ('Switch branches'){
             steps {
                 script {
-                    def gitBranch = sh script:'git rev-parse --abbrev-ref HEAD', returnStdout: true
-                    println "Gitbranch: ${gitBranch}"
-                    GIT_BRANCH = gitBranch.replace("/n", "")
+                    GIT_BRANCH = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
+                    // def gitBranch = sh script:'git rev-parse --abbrev-ref HEAD', returnStdout: true
+                    // println "Gitbranch: ${gitBranch}"
+                    // GIT_BRANCH = gitBranch.replace("/n", "")
                     env.GIT_BRANCH = GIT_BRANCH
                 }
                  echo "Current agent  info: ${env.GIT_BRANCH}"
@@ -25,7 +26,7 @@ pipeline {
         }
         stage('master-branch-stuff'){
             when{
-                branch 'master'
+                branch 'origin/master'
             }
             steps {
                 echo 'This is master branch, yeah'
@@ -34,7 +35,7 @@ pipeline {
 
         stage('dev-branch-stuff'){
             when{
-                branch 'next'
+                branch 'origin/next'
             }
             steps {
                 echo 'This is next branch, yeah'
