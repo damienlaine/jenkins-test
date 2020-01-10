@@ -19,6 +19,7 @@ pipeline {
                     // def gitBranch = sh script:'git rev-parse --abbrev-ref HEAD', returnStdout: true
                     // println "Gitbranch: ${gitBranch}"
                     // GIT_BRANCH = gitBranch.replace("/n", "")
+                    echo "branche git ${GIT_BRANCH}"
                     env.GIT_BRANCH = GIT_BRANCH
                 }
                  echo "Current agent  info: ${env.GIT_BRANCH}"
