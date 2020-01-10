@@ -1,6 +1,11 @@
 pipeline {
     agent any
     stages{
+        stage ('test'){
+            steps {
+                echo env.BRANCH_NAME
+            }
+        }
         stage('master-branch-stuff'){
             when{
                 branch 'master'
