@@ -3,12 +3,6 @@ pipeline {
 
     stages{
 
-        stage ('Clone master and next branches'){
-            steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master'], [name: '*/next']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/damienlaine/jenkins-test.git']]])
-            }
-        }
-
 
         stage('master-branch-stuff'){
             when{
