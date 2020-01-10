@@ -5,29 +5,34 @@ pipeline {
         GIT_BRANCH = ''
     }
 
-    
     stages{
+
+        stage ('env debug'){
+            steps {
+                echo env
+            }
+        }
+
         stage ('Clone master and next branches'){
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master'], [name: '*/next']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/damienlaine/jenkins-test.git']]])
             }
         }
+
         stage ('Switch branches'){
             steps {
                 script {
-                    GIT_BRANCH = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
-                    // def gitBranch = sh script:'git rev-parse --abbrev-ref HEAD', returnStdout: true
-                    // println "Gitbranch: ${gitBranch}"
-                    // GIT_BRANCH = gitBranch.replace("/n", "")
-                    echo "branche git ${GIT_BRANCH}"
-                    env.GIT_BRANCH = GIT_BRANCH
+                    TEST = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
+                    echo "branche git ${TEST}"
+                    env.GIT_BRANCH = TEST
                 }
-                 echo "Current agent  info: ${env.GIT_BRANCH}"
+                 echo "Current branch: ${env.GIT_BRANCH}"
             }
         }
+
         stage('master-branch-stuff'){
             when{
-                branch 'origin/master'
+                branch 'master'
             }
             steps {
                 echo 'This is master branch, yeah'
@@ -36,7 +41,7 @@ pipeline {
 
         stage('dev-branch-stuff'){
             when{
-                branch 'origin/next'
+                branch 'next'
             }
             steps {
                 echo 'This is next branch, yeah'
