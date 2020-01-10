@@ -1,34 +1,7 @@
 pipeline {
     agent any
-    
-    environment {
-        GIT_BRANCH = ''
-    }
 
     stages{
-
-        stage ('Clone master and next branches'){
-            steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master'], [name: '*/next']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/damienlaine/jenkins-test.git']]])
-            }
-        }
-
-        stage('Build') {
-            steps {
-                sh 'git rev-parse --abbrev-ref HEAD'
-            }
-        }
-
-        stage ('Switch branches'){
-            steps {
-                script {
-                    TEST = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
-                    echo "branche git ${TEST}"
-                    env.GIT_BRANCH = TEST
-                }
-                 echo "Current branch: ${env.GIT_BRANCH}"
-            }
-        }
 
         stage('master-branch-stuff'){
             when{
