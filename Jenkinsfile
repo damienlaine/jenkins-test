@@ -15,7 +15,7 @@ pipeline {
         stage ('Switch branches'){
             steps {
                 script {
-                    def agentInfo = sh script:'git rev-parse --abbrev-ref HEAD', returnStdout: true
+                    def gitBranch = sh script:'git rev-parse --abbrev-ref HEAD', returnStdout: true
                     println "Gitbranch: ${gitBranch}"
                     GIT_BRANCH = gitBranch.replace("/n", "")
                     env.GIT_BRANCH = GIT_BRANCH
