@@ -31,14 +31,5 @@ pipeline {
             }
         }
 
-        stage('Push to Docker Hub'){
-            steps {
-                    script {
-                        docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_HUB_CRED) {
-                        customImage.push(${tag})
-                    }
-                }
-            }
-        }
     }// end stages
 }
