@@ -17,12 +17,9 @@ pipeline {
                     image = docker.build(env.DOCKER_HUB_REPO)
                     def VERSION = sh(
                         returnStdout: true, 
-                        script: """#!/bin/bash
-                        awk -v RS='' '/#/ {print; exit}' RELEASE.md | head -1 | sed 's/#//' | sed 's/ //'
-                        """
+                        script: "awk -v RS='' '/#/ {print; exit}' RELEASE.md | head -1 | sed 's/#//' | sed 's/ //'"
                     ).trim()
-                    echo $VERSION
-
+                    echo "tralala $VERSION"
                     docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_HUB_CRED) {
                         image.push($VERSION)
                         image.push('latest')
