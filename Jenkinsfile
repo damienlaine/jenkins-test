@@ -15,7 +15,9 @@ pipeline {
                 echo 'Publishing latest'
                 script {
                     def image = docker.build(env.DOCKER_HUB_REPO)
-                    def version = sh ("""awk -v RS='' '/#/ {print ${2}; exit}' RELEASE.md""")
+                    def version = sh """#!/bin/bash
+                    awk -v RS='' '/#/ {print; exit}' RELEASE.md | head -1 | sed 's/#//'
+                    """
                     echo $version
                     docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_HUB_CRED) {
                         image.push($version)
