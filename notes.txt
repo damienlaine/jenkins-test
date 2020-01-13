@@ -29,3 +29,13 @@ test
 test
 test
 test
+<<<<<<< HEAD
+=======
+test
+test
+test
+test
+test
+test
+test
+>>>>>>> master

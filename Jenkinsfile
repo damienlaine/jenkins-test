@@ -1,19 +1,28 @@
+
 pipeline {
     agent any
+    environment {
+        DOCKER_HUB_REPO = "damienlaine/test-jenkins"
+        DOCKER_HUB_CRED = "docker-hub-credentials"
+    }
 
     stages{
-
-
-        stage('master-branch-stuff'){
+        stage('Master branch'){
             when{
                 branch 'master'
             }
             steps {
-                echo 'This is master branch, yeah'
+                echo 'Publishing latest'
+                script {
+                    def image = docker.build(env.DOCKER_HUB_REPO)
+                    docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_HUB_CRED) {
+                        image.push('latest')
+                    }
+                }
             }
         }
 
-        stage('dev-branch-stuff'){
+        stage('Next branch'){
             when{
                 branch 'next'
             }
@@ -22,5 +31,5 @@ pipeline {
             }
         }
 
-    }
+    }// end stages
 }

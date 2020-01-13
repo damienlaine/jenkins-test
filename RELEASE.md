@@ -1,5 +1,3 @@
-# 1.0.2
-- Youpi
 # 1.0.1
 - test
 - lalala
