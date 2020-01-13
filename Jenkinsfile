@@ -7,13 +7,6 @@ pipeline {
     }
 
     stages{
-
-        stage ('Cloning from GitHub'){
-            steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master'], [name: '*/next']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/damienlaine/jenkins-test.git']]])
-            }
-        }
-
         stage('Master branch'){
             when{
                 branch 'master'
@@ -29,7 +22,7 @@ pipeline {
             }
         }
 
-        stage('Next branch Docker build'){
+        stage('Next branch'){
             when{
                 branch 'next'
             }
