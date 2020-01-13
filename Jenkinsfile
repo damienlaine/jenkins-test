@@ -21,6 +21,7 @@ pipeline {
                         awk -v RS='' '/#/ {print; exit}' RELEASE.md | head -1 | sed 's/#//' | sed 's/ //'
                         """
                     ).trim()
+                    echo $VERSION
 
                     docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_HUB_CRED) {
                         image.push($VERSION)
