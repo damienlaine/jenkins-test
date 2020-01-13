@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_REPO = "damienlaine/test-jenkins"
         DOCKER_HUB_CRED = "docker-hub-credentials"
+        VERSION = ''
     }
 
     stages{
@@ -15,14 +16,14 @@ pipeline {
                 echo 'Publishing latest'
                 script {
                     def image = docker.build(env.DOCKER_HUB_REPO)
-                    def version = sh(
+                    env.VERSION = sh(
                         returnStdout: true, 
                         script: """#!/bin/bash
                         awk -v RS='' '/#/ {print; exit}' RELEASE.md | head -1 | sed 's/#//' | sed 's/ //'
                         """
                     )
                     docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_HUB_CRED) {
-                        image.push($version)
+                        image.push(env.VERSION)
                         image.push('latest')
                     }
                 }
