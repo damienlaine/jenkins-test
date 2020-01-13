@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    environment {
+        DOCKER_HUB_REPO = "damienlaine/test-jenkins"
+        DOCKER_HUB_CRED = "docker-hub-credentials"
+    }
 
     stages{
 
@@ -9,17 +13,15 @@ pipeline {
             }
         }
 
-        
-
-        stage('Master branch Docker build'){
+        stage('Master branch'){
             when{
                 branch 'master'
             }
             steps {
-                echo 'Building latest and Semver images'
+                echo 'Building from Dockerfile'
                 script {
-                    def customImage = docker.build("damienlaine/test-jenkins")
-                    customImage.push()
+                    def customImage = docker.build($DOCKER_HUB_REPO)
+                    def tag = "latest"
                 }
             }
         }
@@ -33,5 +35,14 @@ pipeline {
             }
         }
 
-    }
+        stage('Push to Docker Hub'){
+            steps {
+                    script {
+                        docker.withRegistry('https://registry.hub.docker.com', $DOCKER_HUB_CRED) {
+                        customImage.push(${tag})
+                    }
+                }
+            }
+        }
+    }// end stages
 }
