@@ -9,17 +9,22 @@ pipeline {
             }
         }
 
+        
 
-        stage('master-branch-stuff'){
+        stage('Master branch Docker build'){
             when{
                 branch 'master'
             }
             steps {
-                echo 'This is master branch, yeah'
+                echo 'Building latest and Semver images'
+                script {
+                    def customImage = docker.build("damienlaine/test-jenkins")
+                    customImage.push()
+                }
             }
         }
 
-        stage('dev-branch-stuff'){
+        stage('Next branch Docker build'){
             when{
                 branch 'next'
             }
