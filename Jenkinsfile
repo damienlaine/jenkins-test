@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
     environment {
@@ -18,10 +19,11 @@ pipeline {
                 branch 'master'
             }
             steps {
-                echo 'Building from Dockerfile'
+                echo 'Publishing latest'
                 script {
-                    def customImage = docker.build(env.DOCKER_HUB_REPO)
-                    def tag = "latest"
+                    def image = docker.build(env.DOCKER_HUB_REPO)
+                    docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_HUB_CRED) {
+                    customImage.push('latest')
                 }
             }
         }
@@ -35,14 +37,5 @@ pipeline {
             }
         }
 
-        stage('Push to Docker Hub'){
-            steps {
-                    script {
-                        docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_HUB_CRED) {
-                        customImage.push(${tag})
-                    }
-                }
-            }
-        }
     }// end stages
 }
