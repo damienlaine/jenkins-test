@@ -7,7 +7,7 @@ pipeline {
 
     stages{
 
-        stage ('Clone master and next branches'){
+        stage ('Cloning from GitHub'){
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master'], [name: '*/next']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/damienlaine/jenkins-test.git']]])
             }
@@ -20,7 +20,7 @@ pipeline {
             steps {
                 echo 'Building from Dockerfile'
                 script {
-                    def customImage = docker.build($DOCKER_HUB_REPO)
+                    def customImage = docker.build(env.DOCKER_HUB_REPO)
                     def tag = "latest"
                 }
             }
@@ -38,7 +38,7 @@ pipeline {
         stage('Push to Docker Hub'){
             steps {
                     script {
-                        docker.withRegistry('https://registry.hub.docker.com', $DOCKER_HUB_CRED) {
+                        docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_HUB_CRED) {
                         customImage.push(${tag})
                     }
                 }
