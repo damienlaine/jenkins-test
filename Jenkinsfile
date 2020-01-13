@@ -23,7 +23,7 @@ pipeline {
                 script {
                     def image = docker.build(env.DOCKER_HUB_REPO)
                     docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_HUB_CRED) {
-                    customImage.push('latest')
+                        image.push('latest')
                     }
                 }
             }
