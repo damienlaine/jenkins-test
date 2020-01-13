@@ -15,10 +15,12 @@ pipeline {
                 echo 'Publishing latest'
                 script {
                     def image = docker.build(env.DOCKER_HUB_REPO)
-                    def version = sh """#!/bin/bash
-                    awk -v RS='' '/#/ {print; exit}' RELEASE.md | head -1 | sed 's/#//'
-                    """
-                    echo $version
+                    def version = sh(
+                        returnStdout: true, 
+                        script: """#!/bin/bash
+                        awk -v RS='' '/#/ {print; exit}' RELEASE.md | head -1 | sed 's/#//' | sed 's/ //'
+                        """
+                    )
                     docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_HUB_CRED) {
                         image.push($version)
                         image.push('latest')
