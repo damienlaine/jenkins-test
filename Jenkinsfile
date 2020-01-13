@@ -24,6 +24,7 @@ pipeline {
                     def image = docker.build(env.DOCKER_HUB_REPO)
                     docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_HUB_CRED) {
                     customImage.push('latest')
+                    }
                 }
             }
         }
@@ -37,5 +38,14 @@ pipeline {
             }
         }
 
+        stage('Push to Docker Hub'){
+            steps {
+                    script {
+                        docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_HUB_CRED) {
+                        customImage.push(${tag})
+                    }
+                }
+            }
+        }
     }// end stages
 }
