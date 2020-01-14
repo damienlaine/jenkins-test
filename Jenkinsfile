@@ -39,7 +39,7 @@ pipeline {
                     remote.name = "linto-staging"
                     remote.host = "stage.linto.ai"
                     remote.allowAnyHosts = true
-                    withCredentials([sshUserPrivateKey(credentialsId: 'ssh_stage'), keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName']) {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'sshUser', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
                     remote.user = userName
                     remote.identityFile = identity
                     sshCommand remote: remote, command: 'for i in {1..5}; do echo -n \"Loop \$i \"; date ; sleep 1; done'
