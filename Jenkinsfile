@@ -33,7 +33,7 @@ pipeline {
                 branch 'master'
             }
             steps {
-                echo "Deployment on staging"
+                echo "Deployment on staging environment"
             }
         }
 
@@ -50,10 +50,19 @@ pipeline {
                         script: "awk -v RS='' '/#/ {print; exit}' RELEASE.md | head -1 | sed 's/#//' | sed 's/ //'"
                     ).trim()
                     docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_HUB_CRED) {
-                        image.push("${VERSION}")
-                        image.push('unstable')
+                        image.push("${VERSION}-unstable")
+                        image.push('latest-unstable')
                     }
                 }
+            }
+        }
+
+        stage('Dev deployment'){
+            when{
+                branch 'next'
+            }
+            steps {
+                echo "Deployment on development environment"
             }
         }
 
