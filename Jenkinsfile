@@ -34,6 +34,15 @@ pipeline {
             }
             steps {
                 echo "Deployment on staging environment"
+                script {
+                    def remote = [:]
+                    remote.name = "linto-staging"
+                    remote.host = "stage.linto.ai"
+                    remote.allowAnyHosts = true
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ssh_stage')]) {
+                    sshCommand remote: remote, command: 'for i in {1..5}; do echo -n \"Loop \$i \"; date ; sleep 1; done'
+                    }
+                }
             }
         }
 
