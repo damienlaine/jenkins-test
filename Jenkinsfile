@@ -42,7 +42,7 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ssh_stage', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
                     remote.user = userName
                     remote.identityFile = identity
-                    sshCommand remote: remote, command: 'for i in {1..5}; do echo -n \"Loop \$i \"; date ; sleep 1; done'
+                    sshCommand remote: remote, command: 'docker pull ${DOCKER_HUB_REPO}:latest'
                     }
                 }
             }
@@ -68,12 +68,24 @@ pipeline {
             }
         }
 
-        stage('Dev deployment'){
+
+        stage('Staging deployment'){
             when{
                 branch 'next'
             }
             steps {
-                echo "Deployment on development environment"
+                echo "Deployment on staging environment"
+                script {
+                    def remote = [:]
+                    remote.name = "linto-beta"
+                    remote.host = "beta.linto.ai"
+                    remote.allowAnyHosts = true
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ssh_beta', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
+                    remote.user = userName
+                    remote.identityFile = identity
+                    sshCommand remote: remote, command: 'docker pull ${DOCKER_HUB_REPO}:latest-unstable'
+                    }
+                }
             }
         }
 
