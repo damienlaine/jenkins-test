@@ -69,12 +69,12 @@ pipeline {
         }
 
 
-        stage('Staging deployment'){
+        stage('Beta deployment'){
             when{
                 branch 'next'
             }
             steps {
-                echo "Deployment on staging environment"
+                echo "Deployment on beta environment"
                 script {
                     def remote = [:]
                     remote.name = "linto-beta"
