@@ -42,7 +42,7 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ssh_stage', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
                     remote.user = userName
                     remote.identityFile = identity
-                    sshCommand remote: remote, command: 'docker pull ${DOCKER_HUB_REPO}:latest'
+                    sshCommand remote: remote, command: "docker pull ${DOCKER_HUB_REPO}:latest"
                     }
                 }
             }
@@ -83,7 +83,7 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ssh_beta', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
                     remote.user = userName
                     remote.identityFile = identity
-                    sshCommand remote: remote, command: 'docker pull ${DOCKER_HUB_REPO}:latest-unstable'
+                    sshCommand remote: remote, command: "docker pull ${DOCKER_HUB_REPO}:latest-unstable"
                     }
                 }
             }
